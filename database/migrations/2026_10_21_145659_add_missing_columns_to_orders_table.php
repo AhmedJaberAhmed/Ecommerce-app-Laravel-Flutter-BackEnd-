@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('orders', function (Blueprint $table) {
+            $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->string('status')->default('pending');
+            $table->string('payment_method')->default('cod');
+            $table->unsignedBigInteger('total_cents')->default(0);
+            $table->string('phone')->nullable();
+            $table->text('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('paymob_intention_id')->nullable();
+            $table->string('paymob_transaction_id')->nullable();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropColumn([
+                'user_id', 'status', 'payment_method',
+                'total_cents', 'phone', 'address', 'city',
+                'paymob_intention_id', 'paymob_transaction_id',
+            ]);
+        });
+    }
+};
